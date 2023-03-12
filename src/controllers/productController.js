@@ -107,9 +107,6 @@ exports.getProducts = async (req, res) => {
     if (req.query.price) {
       filters.price = req.query.price;
     }
-    if (req.query.photos) {
-      filters.photos = req.query.photos;
-    }
     if (req.query.seller) {
       filters.seller = req.query.seller;
     }
