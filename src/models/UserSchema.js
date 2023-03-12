@@ -41,14 +41,14 @@ const UserSchema = new mongoose.Schema({
   },
   preferencias:{
     categorias: {
-      type: Schema.Types.ObjectId,
+      type:mongoose.Schema.Types.ObjectId,
       ref: 'Categoria',
     },
     tamnho: {
       type: [String],
     },
     marca: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Marca',
     },
     favoritos: [{
