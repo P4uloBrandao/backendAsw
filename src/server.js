@@ -6,6 +6,7 @@ const registerController = require('./controllers/registerUserController');
 const loginController = require('./controllers/loginController');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const adminRoutes=require('./routes/adminRoutes')
 require("dotenv").config();
 
 const app = express();
@@ -23,7 +24,8 @@ db.once('open', () => {
   // Routes base:
   app.use('/users', userRoutes);
   app.use('/products', productRoutes);
-
+  app.use('/admin',adminRoutes)
+  
   // Routes finais
   app.post('/register', registerController.registerUser);
   app.post('/login', loginController.loginUser);

@@ -82,4 +82,25 @@ userController.getAllUsers = async (req, res) => {
   }
 };
 
+exports.searchUsers = async (req, res, next) => {
+  const { name, email, city, zipCode, gender, ageMin, ageMax } = req.query;
+  let filters = {};
+  if (name) filters['name'] = { $regex: name, $options: 'i' };
+  if (email) filters['email'] = { $regex: email, $options: 'i' };
+  if (city) filters['city'] = { $regex: city, $options: 'i' };
+  if (zipCode) filters['zipCode'] = { $regex: zipCode, $options: 'i' };
+  if (gender) filters['gender'] = gender;
+  if (ageMin || ageMax) {
+    filters['dateOfBirth'] = {};
+    if (ageMin) filters['dateOfBirth']['$lte'] = new Date(new Date() - (ageMin * 365 * 24 * 60 * 60 * 1000));
+    if (ageMax) filters['dateOfBirth']['$gte'] = new Date(new Date() - (ageMax * 365 * 24 * 60 * 60 * 1000));
+  }
+  try {
+    const users = await User.find(filters);
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = userController;

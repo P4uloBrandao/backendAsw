@@ -39,10 +39,32 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  preferencias: {
-    categorias: [String],
-    tamanhos: [String],
-    marcas: [String]
+  preferencias:{
+    categorias: {
+      type: Schema.Types.ObjectId,
+      ref: 'Categoria',
+    },
+    tamnho: {
+      type: [String],
+    },
+    marca: {
+      type: Schema.Types.ObjectId,
+      ref: 'Marca',
+    },
+    favoritos: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Produto'
+    }],
+    carrinho: [{
+      produto: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Produto'
+      },
+      quantidade: {
+        type: Number,
+        default: 1
+      }
+    }]
   }
 });
 
