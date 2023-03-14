@@ -13,4 +13,7 @@ router.delete('/:id', userController.deleteUser);
 
 router.get('/', userController.getAllUsers);
 
+router.get('/users/search', searchUsers);
+
+
 module.exports = router;
