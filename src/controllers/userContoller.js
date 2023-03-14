@@ -82,7 +82,7 @@ userController.getAllUsers = async (req, res) => {
   }
 };
 
-exports.searchUsers = async (req, res, next) => {
+userController.searchUsers = async (req, res, next) => {
   const { name, email, city, zipCode, gender, ageMin, ageMax } = req.query;
   let filters = {};
   if (name) filters['name'] = { $regex: name, $options: 'i' };
