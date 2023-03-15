@@ -55,21 +55,22 @@ const UserSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Marca',
     },
-    favoritos: [{
+   
+  },
+  favoritos:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Produto'
+  }],
+  carrinho: [{
+    produto: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Produto'
-    }],
-    carrinho: [{
-      produto: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Produto'
-      },
-      quantidade: {
-        type: Number,
-        default: 1
-      }
-    }]
-  }
+    },
+    quantidade: {
+      type: Number,
+      default: 1
+    }
+  }]
 });
 
 const User = mongoose.model('User', UserSchema);

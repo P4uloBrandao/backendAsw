@@ -7,7 +7,7 @@ const produtosVendidoSchema = new Schema({
     ref: 'Produto',
     required: true
   },
-  qauntidade: {
+  quantidade: {
     type: Number,
     required: true
   },
