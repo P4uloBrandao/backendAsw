@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const categorySchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique:true
   },
 
 });
@@ -14,14 +15,15 @@ const categorySchema = new Schema({
 const marcaSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique:true
   },
 
 });
 
 
-const Category = mongoose.model('Categoria', categorySchema);
-const Brand = mongoose.model('Marca', marcaSchema);
+const Categoria = mongoose.model('Categoria', categorySchema);
+const Marca = mongoose.model('Marca', marcaSchema);
 
 
-module.exports = { Marca, Categoria};
+module.exports = { Marca,Categoria};

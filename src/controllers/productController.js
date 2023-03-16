@@ -1,4 +1,6 @@
 const Product = require('../models/ProductsShema');
+const Categoria = require('../models/ProductCategoriaSchema').Categoria
+const Marca = require('../models/ProductCategoriaSchema').Marca;
 
 exports.getAllProducts = async (req, res) => {
   try {
@@ -120,4 +122,77 @@ exports.getProducts = async (req, res) => {
       res.status(400).json({ message: error.message });
     }
   };
+
+exports.createCategoria = async (req, res) => {
+  const category = new Categoria({
+  name: req.body.name
+  });
+  try {
+  const newCategory = await category.save();
+  res.status(201).json(newCategory);
+  } catch (error) {
+  res.status(400).json({ message: error.message });
+  }
+};
+
+exports.deleteCategoria = async (req, res) => {
+  try {
+  const category = await Categoria.findById(req.params.id);
+  if (!category) {
+  return res.status(404).json({ message: 'Categoria nao encontrada' });
+  }
+  await category.remove();
+  res.status(200).json({ message: 'Categoria apagada' });
+  } catch (error) {
+  res.status(500).json({ message: error.message });
+  }
+};
+    
+exports.createMarca = async (req, res) => {
+  const brand = new Marca({
+  name: req.body.name
+  });
+  try {
+  const newBrand = await brand.save();
+  res.status(201).json(newBrand);
+  } catch (error) {
+  res.status(400).json({ message: error.message });
+  }
+};
+    
+exports.deleteMarca= async (req, res) => {
+  try {
+  const brand = await Marca.findById(req.params.id);
+  if (!brand) {
+  return res.status(404).json({ message: 'Marca não encontrada' });
+  }
+  await brand.remove();
+  res.status(200).json({ message: 'Marca apagada' });
+  } catch (error) {
+  res.status(500).json({ message: error.message });
+  }
+};
+
+
+exports.getAllCategories = async (req, res) => {
+  try {
+    const categories = await Categoria.find();
+    res.status(200).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getAllBrands = async (req, res) => {
+  try {
+    const brands = await Marca.find();
+    res.status(200).json(brands);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+
   
