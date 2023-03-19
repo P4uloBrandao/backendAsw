@@ -11,19 +11,10 @@ const categorySchema = new Schema({
 
 });
 
-// schema para marca de cada produto
-const marcaSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    unique:true
-  },
-
-});
 
 
 const Categoria = mongoose.model('Categoria', categorySchema);
-const Marca = mongoose.model('Marca', marcaSchema);
 
 
-module.exports = { Marca,Categoria};
+
+module.exports = Categoria;

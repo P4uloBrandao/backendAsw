@@ -6,7 +6,8 @@ const registerController = require('./controllers/registerUserController');
 const loginController = require('./controllers/loginController');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
-
+const categoryRoutes=require('./routes/categoriasRoutes');
+const marcaRoutes=require('./routes/marcaRoutes')
 
 
 require("dotenv").config();
@@ -25,7 +26,10 @@ db.once('open', () => {
 
   // Routes base:
   app.use('/users', userRoutes);
-  app.use('/products', productRoutes);
+ // app.use('/products', productRoutes);
+  app.use('/categorias',categoryRoutes);
+   // app.use('/products', productRoutes);
+  app.use('/marcas',marcaRoutes);
 
 
   // Routes finais
