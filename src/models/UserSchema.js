@@ -45,14 +45,14 @@ const UserSchema = new mongoose.Schema({
   },
   preferencias:{
     categorias: {
-      type:mongoose.Schema.Types.ObjectId,
+      type:[mongoose.Schema.Types.ObjectId],
       ref: 'Categoria',
     },
     tamanho: {
       type: [String],
     },
     marca: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: 'Marca',
     },
    
