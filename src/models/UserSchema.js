@@ -49,7 +49,7 @@ const UserSchema = new mongoose.Schema({
       ref: 'Categoria',
     },
     tamanho: {
-      type: [String],
+      type: String,
     },
     marca: {
       type: [mongoose.Schema.Types.ObjectId],
