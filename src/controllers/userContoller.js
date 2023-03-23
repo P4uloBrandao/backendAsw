@@ -28,8 +28,16 @@ userController.updateUser = async (req, res) => {
       telefone,
       email,
       password,
-      preferencias
+      categorias,
+      marcas,
+      tamanho,
     } = req.body;
+
+    const preferencias={
+      categorias,
+      marcas,
+      tamanho,
+    }
 
     const user = await User.findByIdAndUpdate(
       req.params.id,
