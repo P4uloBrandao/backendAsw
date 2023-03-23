@@ -29,13 +29,13 @@ userController.updateUser = async (req, res) => {
       email,
       password,
       categorias,
-      marcas,
+      marca,
       tamanho,
     } = req.body;
 
     const preferencias={
       categorias,
-      marcas,
+      marca,
       tamanho,
     }
 
