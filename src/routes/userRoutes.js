@@ -15,5 +15,9 @@ router.get('/', userController.getAllUsers);
 
 router.get('/users/search', userController.searchUsers);
 
+router.post('/:userId/favorites/:productId', userController.addFavoriteProduct);
+
+router.post('/:userId/cart/:productId', userController.addProductToCart);
+
 
 module.exports = router;

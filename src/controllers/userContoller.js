@@ -1,4 +1,5 @@
 const User = require('../models/UserSchema');
+const Product=require('../models/ProductsShema')
 
 const userController = {};
 
@@ -110,5 +111,51 @@ userController.searchUsers = async (req, res, next) => {
     next(error);
   }
 };
+
+
+userController.addFavoriteProduct = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const product = await Product.findById(req.params.productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    user.favorites.push(product);
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Product added to favorites' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+userController.addProductToCart = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const product = await Product.findById(req.params.productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    user.cart.push(product);
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Product added to cart' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
 
 module.exports = userController;
