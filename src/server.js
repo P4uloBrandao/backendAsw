@@ -31,7 +31,7 @@ db.once('open', () => {
    // app.use('/products', productRoutes);
   app.use('/marcas',marcaRoutes);
 
-
+  app.use('/products',productRoutes)
   // Routes finais
   app.post('/register', registerController.registerUser);
   app.post('/login', loginController.loginUser);

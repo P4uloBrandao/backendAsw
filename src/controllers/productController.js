@@ -50,7 +50,4 @@ productController.getAllCategorias = async (req, res) => {
 };
 
 
-
-
-
 module.exports = productController;
