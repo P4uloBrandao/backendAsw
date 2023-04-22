@@ -125,7 +125,7 @@ userController.addFavoriteProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    user.favorites.push(product);
+    user.favoritos.push(product);
     await user.save();
 
     res.status(200).json({ success: true, message: 'Product added to favorites' });
@@ -146,7 +146,7 @@ userController.addProductToCart = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    user.cart.push(product);
+    user.carrinho.push(product);
     await user.save();
 
     res.status(200).json({ success: true, message: 'Product added to cart' });
@@ -168,7 +168,7 @@ userController.removeFavoriteProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    user.favorites.pull(product);
+    user.favoritos.pull(product);
     await user.save();
 
     res.status(200).json({ success: true, message: 'Product removed from favorites' });
