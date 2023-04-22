@@ -182,6 +182,21 @@ userController.removeFavoriteProduct = async (req, res) => {
   }
 };
 
+userController.getFavoriteProducts = async (req, res) =>{
+  try {
+    const user = await User.findById(req.params.userId).populate('favorites');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.status(200).json({ success: true, favorites: user.favoritos });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
 
 
 
