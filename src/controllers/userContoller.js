@@ -112,7 +112,6 @@ userController.searchUsers = async (req, res, next) => {
   }
 };
 
-
 userController.addFavoriteProduct = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -125,7 +124,11 @@ userController.addFavoriteProduct = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    user.favoritos.push(product);
+    if (user.favoritos.includes(product._id)) {
+      return res.status(400).json({ success: false, message: 'Product already in favorites' });
+    }
+
+    user.favoritos.push(product._id);
     await user.save();
 
     res.status(200).json({ success: true, message: 'Product added to favorites' });
@@ -133,6 +136,8 @@ userController.addFavoriteProduct = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
 
 userController.addProductToCart = async (req, res) => {
   try {
