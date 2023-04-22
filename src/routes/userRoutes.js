@@ -19,5 +19,6 @@ router.post('/:userId/favorites/:productId', userController.addFavoriteProduct);
 
 router.post('/:userId/cart/:productId', userController.addProductToCart);
 
+router.delete('/:userId/favorites/:productId', userController.removeFavoriteProduct);
 
 module.exports = router;

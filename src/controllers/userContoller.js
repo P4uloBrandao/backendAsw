@@ -156,6 +156,28 @@ userController.addProductToCart = async (req, res) => {
 };
 
 
+userController.removeFavoriteProduct = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const product = await Product.findById(req.params.productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    user.favorites.pull(product);
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Product removed from favorites' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 
 
 module.exports = userController;
