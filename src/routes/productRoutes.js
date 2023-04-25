@@ -121,7 +121,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
         return res.status(404).json({ success: false, message: 'Product not found' });
       }
   
-      res.status(200).json({ success: true, data: user });
+      res.status(200).json({ success: true, data: product });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
