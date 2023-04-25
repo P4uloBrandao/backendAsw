@@ -195,6 +195,42 @@ userController.getFavoriteProducts = async (req, res) =>{
   }
 };
 
+userController.getAllProductsFromCart = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).populate('carrinho');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.status(200).json({ success: true, carrinho: user.carrinho });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+userController.removeProductFromCart = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const productIndex = user.carrinho.findIndex(product => product._id === req.params.productId);
+    if (productIndex === -1) {
+      return res.status(404).json({ success: false, message: 'Product not found in cart' });
+    }
+
+    user.carrinho.splice(productIndex, 1);
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Product removed from cart' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 
 
 

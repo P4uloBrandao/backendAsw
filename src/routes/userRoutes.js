@@ -23,4 +23,10 @@ router.delete('/:userId/favorites/:productId', userController.removeFavoriteProd
 
 router.get('/:userId/favorites', userController.getFavoriteProducts);
 
+router.delete('/:userId/cart/:productId', userController.removeProductFromCart);
+
+router.get('/:userId/cart', userController.getAllProductsFromCart);
+
+
+
 module.exports = router;
