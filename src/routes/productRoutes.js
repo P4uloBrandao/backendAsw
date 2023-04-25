@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Product =require('../models/ProductsShema')
+const ProdutosVendidos=require('../models/ProdutosVendidos')
 const asyncHandler = require('express-async-handler')
 
 
@@ -126,6 +127,32 @@ router.put('/:id', asyncHandler(async (req, res) => {
       res.status(500).json({ success: false, message: error.message });
     }
   }));
+
+
+  //obter  todos os produtos comprados por um user
+  router.get('/produtos-comprados/:userId', async (req, res) => {
+    try {
+      const produtos = await ProdutosVendidos.find({ buyer: req.params.userId }).populate('categories brand seller');
+      res.json(produtos);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+//obter todos os produtos  vendidos por um dados user
+  router.get('/produtos-vendidos/:userId', async (req, res) => {
+    try {
+      const produtos = await ProdutosVendidos.find({ seller: req.params.userId }).populate('categories brand buyer');
+      res.json(produtos);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+  
+  
+
+
+
 
   
   
