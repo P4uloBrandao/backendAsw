@@ -151,7 +151,9 @@ userController.addProductToCart = async (req, res) => {
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
-
+    if(user.carrinho.includes(req.params.productId)){
+      return res.status(409).json({ success: false, message: 'Product already added' });
+    }
     user.carrinho.push(product);
     await user.save();
 
@@ -238,14 +240,20 @@ userController.buyProduct = async (req, res) => {
 
     const product = await Product.findById(productId);
     const buyer = await User.findById(buyerId)
-    
+    const soldProductExists = await SoldProduct.findOne({ previousId: productId });
+    const productIndex = buyer.carrinho.findIndex(produto => produto._id === productId);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     } else if (!buyer) {
       return res.status(404).json({ message: 'Buyer not found' });
-    } else {
+    } else if(soldProductExists){
+        return res.status(400).json({ message: 'Product already sold' });    
+    }else if(productIndex === -1){
+      return res.status(404).json({ success: false, message: 'Product does not exist on the cart' });
+    }else {
       // Cria um novo documento de venda de produto
       const soldProduct = new SoldProduct({
+        previousId:productId,
         title: product.title,
         description: product.description,
         categories: product.categories,
@@ -260,20 +268,17 @@ userController.buyProduct = async (req, res) => {
         soldPrice: soldPrice,
         soldDate: new Date()
       });
-
+      
       // Salva o documento de venda de produto
       await soldProduct.save();
 
       // Remove o produto da coleção "products"
       await Product.deleteOne({ _id: productId });
 
-      // Remove o produto do carrinho do usuário
-      const productIndex = buyer.carrinho.findIndex(produto => produto._id === productId);
-      if (productIndex === -1) {
-        return res.status(404).json({ success: false, message: 'Product does not exist on the cart' });
-      }
       buyer.carrinho.splice(productIndex, 1);
+
       await buyer.save();
+      
       console.log("Product removed from the cart");
       res.status(200).json({ message: 'Product Sell Done' });
     }
