@@ -1,5 +1,6 @@
 const User = require('../models/UserSchema');
 const Product=require('../models/ProductsShema')
+const SoldProduct=require('../models/ProdutosVendidos')
 
 const userController = {};
 
@@ -231,9 +232,47 @@ userController.removeProductFromCart = async (req, res) => {
 };
 
 
+userController.buyProduct = async (req, res) => {
+  try {
+  const { productId, buyerId, soldPrice } = req.body;
 
-
-
+  const product = await Product.findById(productId);
+  if (!product) {
+    return res.status(404).json({ message: 'Product not found.' });
+  }
+  
+  // Cria um novo documento de venda de produto
+  const soldProduct = new SoldProduct({
+    title: product.title,
+    description: product.description,
+    categories: product.categories,
+    brand: product.brand,
+    type: product.type,
+    size: product.size,
+    condition: product.condition,
+    price: product.price,
+    images: product.images,
+    seller: product.seller,
+    buyer: buyerId,
+    soldPrice: soldPrice,
+    soldDate: new Date()
+  });
+  
+  // Salva o documento de venda de produto
+  await soldProduct.save();
+  
+  // Remove o produto da coleção "products"
+  await product.remove();
+  
+  res.status(200).json({ message: 'Product Sell Done' });
+  } catch (error) {
+  console.error(error);
+  res.status(500).json({ message: 'Error' });
+  }
+};
+  
+  
+  
 
 
 module.exports = userController;
