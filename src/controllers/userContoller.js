@@ -234,17 +234,17 @@ userController.removeProductFromCart = async (req, res) => {
 
 userController.buyProduct = async (req, res) => {
   try {
-  const { productId, buyerId, soldPrice } = req.body;
+    const { productId, buyerId, soldPrice } = req.body;
 
-  const product = await Product.findById(productId);
-  const buyer=await User.findById(buyerId)
-  if (!product ) {
-    return res.status(404).json({ message: 'Product not found' });
-  }else{
-      if(!buyer){
-        return res.status(404).json({ message: 'Buyer not found' });
-      }
-            // Cria um novo documento de venda de produto
+    const product = await Product.findById(productId);
+    const buyer = await User.findById(buyerId)
+    
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    } else if (!buyer) {
+      return res.status(404).json({ message: 'Buyer not found' });
+    } else {
+      // Cria um novo documento de venda de produto
       const soldProduct = new SoldProduct({
         title: product.title,
         description: product.description,
@@ -260,29 +260,29 @@ userController.buyProduct = async (req, res) => {
         soldPrice: soldPrice,
         soldDate: new Date()
       });
-      
+
       // Salva o documento de venda de produto
       await soldProduct.save();
-      
-      // Remove o produto da coleção "products"
-      await product.remove();
 
-      //remover o produto  do carrinho do user:
-      const productIndex = buyer.carrinho.findIndex(produto => produto._id ===product._id);
+      // Remove o produto da coleção "products"
+      await Product.deleteOne({ _id: productId });
+
+      // Remove o produto do carrinho do usuário
+      const productIndex = buyer.carrinho.findIndex(produto => produto._id === productId);
       if (productIndex === -1) {
         return res.status(404).json({ success: false, message: 'Product does not exist on the cart' });
       }
       buyer.carrinho.splice(productIndex, 1);
       await buyer.save();
-      console.log("Product removed  from the cart");
+      console.log("Product removed from the cart");
       res.status(200).json({ message: 'Product Sell Done' });
-  }
+    }
   } catch (error) {
-  console.error(error);
-  res.status(500).json({ message: 'Error' });
+    console.error(error);
+    res.status(500).json({ message: 'Error' });
   }
 };
-  
+
   
   
 
