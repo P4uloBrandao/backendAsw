@@ -132,7 +132,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
   //obter  todos os produtos comprados por um user
   router.get('/produtos-comprados/:userId', async (req, res) => {
     try {
-      const produtos = await ProdutosVendidos.find({ buyer: req.params.userId }).populate('categories brand seller');
+      const produtos = await ProdutosVendidos.find({ buyer: req.params.userId }).populate('categories brand buyer');
       res.json(produtos);
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -142,7 +142,7 @@ router.put('/:id', asyncHandler(async (req, res) => {
 //obter todos os produtos  vendidos por um dados user
   router.get('/produtos-vendidos/:userId', async (req, res) => {
     try {
-      const produtos = await ProdutosVendidos.find({ seller: req.params.userId }).populate('categories brand buyer');
+      const produtos = await ProdutosVendidos.find({ seller: req.params.userId }).populate('categories brand seller');
       res.json(produtos);
     } catch (err) {
       res.status(500).json({ message: err.message });
