@@ -62,14 +62,9 @@ const UserSchema = new mongoose.Schema({
     ref: 'Produto'
   }],
   carrinho: [{
-    produto: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Produto'
-    },
-    quantidade: {
-      type: Number,
-      default: 1
-    }
+ 
   }]
 });
 
