@@ -143,19 +143,23 @@ userController.addFavoriteProduct = async (req, res) => {
 userController.addProductToCart = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
-    const product = await Product.findById(req.params.productId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
-    } else if (!product) {
-      return res.status(404).json({ success: false, message: 'Product not found' });
-    } else if (user.carrinho.includes(req.params.productId)) {
-      return res.status(409).json({ success: false, message: 'Product already added' });
-    } else {
-      user.carrinho.push(product);
-      await user.save();
-
-      res.status(200).json({ success: true, message: 'Product added to cart' })
     }
+
+    const product = await Product.findById(req.params.productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    if (user.carrinho.includes(product._id)) {
+      return res.status(400).json({ success: false, message: 'Product already in favorites' });
+    }
+
+    user.carrinho.push(product._id);
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Product added to favorites' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
