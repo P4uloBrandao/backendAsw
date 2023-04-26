@@ -243,13 +243,14 @@ userController.buyProduct = async (req, res) => {
     const product = await Product.findById(productId);
     const buyer = await User.findById(buyerId)
     const soldProductExists = await SoldProduct.findOne({ previousId: productId });
+    const productIndex = buyer.carrinho.findIndex(productId);
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     } else if (!buyer) {
       return res.status(404).json({ message: 'Buyer not found' });
     } else if (soldProductExists) {
       return res.status(400).json({ message: 'Product already sold' });
-    } else if (!user.carrinho.includes(product._id)) {
+    } else if (productIndex === -1) {
       return res.status(404).json({ success: false, message: 'Product does not exist on the cart' });
     } else {
       // Cria um novo documento de venda de produto
