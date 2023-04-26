@@ -221,12 +221,12 @@ userController.removeProductFromCart = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    const productIndex = user.carrinho.findIndex(product => product._id === req.params.productId);
-    if (productIndex === -1) {
-      return res.status(404).json({ success: false, message: 'Product not found in cart' });
+    const product = await Product.findById(req.params.productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    user.carrinho.splice(productIndex, 1);
+    user.carrinho.pull(product);
     await user.save();
 
     res.status(200).json({ success: true, message: 'Product removed from cart' });
@@ -243,14 +243,14 @@ userController.buyProduct = async (req, res) => {
     const product = await Product.findById(productId);
     const buyer = await User.findById(buyerId)
     const soldProductExists = await SoldProduct.findOne({ previousId: productId });
-    const productIndex = buyer.carrinho.findIndex(productId);
+
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     } else if (!buyer) {
       return res.status(404).json({ message: 'Buyer not found' });
     } else if (soldProductExists) {
       return res.status(400).json({ message: 'Product already sold' });
-    } else if (productIndex === -1) {
+    } else if (!buyer.carrinho.includes(product._id)) {
       return res.status(404).json({ success: false, message: 'Product does not exist on the cart' });
     } else {
       // Cria um novo documento de venda de produto
@@ -277,7 +277,7 @@ userController.buyProduct = async (req, res) => {
       // Remove o produto da coleção "products"
       await Product.deleteOne({ _id: productId });
 
-      buyer.carrinho.splice(productIndex, 1);
+      buyer.carrinho.pull(product);
 
       await buyer.save();
 
