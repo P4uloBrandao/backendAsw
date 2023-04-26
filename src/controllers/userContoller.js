@@ -1,6 +1,6 @@
 const User = require('../models/UserSchema');
-const Product=require('../models/ProductsShema')
-const SoldProduct=require('../models/ProdutosVendidos')
+const Product = require('../models/ProductsShema')
+const SoldProduct = require('../models/ProdutosVendidos')
 
 const userController = {};
 
@@ -35,7 +35,7 @@ userController.updateUser = async (req, res) => {
       tamanho,
     } = req.body;
 
-    const preferencias={
+    const preferencias = {
       categorias,
       marca,
       tamanho,
@@ -143,21 +143,19 @@ userController.addFavoriteProduct = async (req, res) => {
 userController.addProductToCart = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
+    const product = await Product.findById(req.params.productId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
-    }
-
-    const product = await Product.findById(req.params.productId);
-    if (!product) {
+    } else if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
-    }
-    if(user.carrinho.includes(req.params.productId)){
+    } else if (user.carrinho.includes(req.params.productId)) {
       return res.status(409).json({ success: false, message: 'Product already added' });
-    }
-    user.carrinho.push(product);
-    await user.save();
+    } else {
+      user.carrinho.push(product);
+      await user.save();
 
-    res.status(200).json({ success: true, message: 'Product added to cart' });
+      res.status(200).json({ success: true, message: 'Product added to cart' })
+    }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -185,7 +183,7 @@ userController.removeFavoriteProduct = async (req, res) => {
   }
 };
 
-userController.getFavoriteProducts = async (req, res) =>{
+userController.getFavoriteProducts = async (req, res) => {
   try {
     const user = await User.findById(req.params.userId).populate('favoritos');
     if (!user) {
@@ -246,14 +244,14 @@ userController.buyProduct = async (req, res) => {
       return res.status(404).json({ message: 'Product not found' });
     } else if (!buyer) {
       return res.status(404).json({ message: 'Buyer not found' });
-    } else if(soldProductExists){
-        return res.status(400).json({ message: 'Product already sold' });    
-    }else if(productIndex === -1){
+    } else if (soldProductExists) {
+      return res.status(400).json({ message: 'Product already sold' });
+    } else if (productIndex === -1) {
       return res.status(404).json({ success: false, message: 'Product does not exist on the cart' });
-    }else {
+    } else {
       // Cria um novo documento de venda de produto
       const soldProduct = new SoldProduct({
-        previousId:productId,
+        previousId: productId,
         title: product.title,
         description: product.description,
         categories: product.categories,
@@ -268,7 +266,7 @@ userController.buyProduct = async (req, res) => {
         soldPrice: soldPrice,
         soldDate: new Date()
       });
-      
+
       // Salva o documento de venda de produto
       await soldProduct.save();
 
@@ -278,7 +276,7 @@ userController.buyProduct = async (req, res) => {
       buyer.carrinho.splice(productIndex, 1);
 
       await buyer.save();
-      
+
       console.log("Product removed from the cart");
       res.status(200).json({ message: 'Product Sell Done' });
     }
@@ -288,8 +286,8 @@ userController.buyProduct = async (req, res) => {
   }
 };
 
-  
-  
+
+
 
 
 module.exports = userController;
