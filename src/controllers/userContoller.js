@@ -157,7 +157,7 @@ userController.addProductToCart = async (req, res) => {
     }
 
     if(product.seller===req.params.userId){
-      return res.status(400).json({ success: false, message: 'Impossible to add own product to Cart' });
+      return res.status(400).json({ success: false, message: 'Impossible to add own product to Ca rt' });
     }
 
     user.carrinho.push(product._id);

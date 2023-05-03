@@ -3,6 +3,7 @@ const router = express.Router();
 const Product =require('../models/ProductsShema')
 const ProdutosVendidos=require('../models/ProdutosVendidos')
 const asyncHandler = require('express-async-handler')
+const User=require('../models/UserSchema')
 
 
 router.post('/:id/add', asyncHandler(async (req, res) => {
@@ -99,13 +100,13 @@ router.put('/:id', asyncHandler(async (req, res) => {
   //retornar os produtos da preferencia de um utilizador
   router.get('/user/:id/preferred-products', asyncHandler(async (req, res) => {
     try {
-      const {id} = req.params;
-      const user = await User.findById(id);
+      const user = await User.findById(req.params.id);
       const {categorias, marca, tamanho} = user.preferencias;
       const products = await Product.find({ 
-        categories: { $in: categorias },
-        brand: { $in: marca },
-        size: tamanho
+        $or:[
+          {categories:{ $in: categorias }},
+          {brand:{ $in: marca }}
+        ]
       });
       res.json(products);
     } catch (error) {
