@@ -97,22 +97,34 @@ router.put('/:id', asyncHandler(async (req, res) => {
     }
   }));
   
-  //retornar os produtos da preferencia de um utilizador
+  //retornar os   da preferencia de um utilizador
   router.get('/user/:id/preferred-products', asyncHandler(async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
       const {categorias, marca, tamanho} = user.preferencias;
-      const products = await Product.find({ 
+  
+      // buscar os produtos preferidos do usuário
+      const preferredProducts = await Product.find({ 
         $or:[
           {categories:{ $in: categorias }},
           {brand:{ $in: marca }}
         ]
       });
-      res.json(products);
+  
+      // buscar todos os produtos que não foram incluídos na filtragem
+      const allProducts = await Product.find({
+        _id: { $nin: preferredProducts.map(p => p._id) }
+      });
+  
+      // adicionar os produtos restantes aos produtos preferidos
+      preferredProducts.push(...allProducts);
+  
+      res.json(preferredProducts);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   }));
+  
 
   //obter um produto pelo Id
   router.get('/:id', asyncHandler(async (req, res) => {
