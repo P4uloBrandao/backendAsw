@@ -254,8 +254,6 @@ userController.buyProduct = async (req, res) => {
       return res.status(404).json({ message: 'Buyer not found' });
     } else if (soldProductExists) {
       return res.status(400).json({ message: 'Product already sold' });
-    } else if (!buyer.carrinho.includes(product._id)) {
-      return res.status(404).json({ success: false, message: 'Product does not exist on the cart' });
     } else {
       // Cria um novo documento de venda de produto
       const soldProduct = new SoldProduct({
@@ -278,14 +276,16 @@ userController.buyProduct = async (req, res) => {
       // Salva o documento de venda de produto
       await soldProduct.save();
 
+      //verificar se ao remover dos produtos não lixa a cena dos favoritos;
+      //colocar uma condição  que vê se o produto  pertence a lista  de favoritos caso exista deve remover
+      if(buyer.favoritos.includes(product._id)){
+        buyer.favoritos.pull(product._id)
+        console.log("produto removido dos favoritos")
+      }
+
       // Remove o produto da coleção "products"
       await Product.deleteOne({ _id: productId });
-
-      buyer.carrinho.pull(product);
-
-      await buyer.save();
-
-      console.log("Product removed from the cart");
+      console.log("Product vendido com sucesso");
       res.status(200).json({ message: 'Product Sell Done' });
     }
   } catch (error) {

@@ -107,7 +107,8 @@ router.put('/:id', asyncHandler(async (req, res) => {
       const preferredProducts = await Product.find({ 
         $or:[
           {categories:{ $in: categorias }},
-          {brand:{ $in: marca }}
+          {brand:{ $in: marca }},
+          {tamanho:{$in: tamanho }}
         ]
       });
   

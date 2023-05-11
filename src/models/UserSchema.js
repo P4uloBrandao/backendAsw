@@ -49,7 +49,8 @@ const UserSchema = new mongoose.Schema({
       ref: 'Categoria',
     },
     tamanho: {
-      type: String,
+      type:[String ],
+      unique:true
     },
     marca: {
       type: [mongoose.Schema.Types.ObjectId],
