@@ -11,6 +11,8 @@ const categoryRoutes=require('./routes/categoriasRoutes');
 const marcaRoutes=require('./routes/marcaRoutes')
 const ChatRooms=require('./models/ChatRoom')
 const asyncHandler = require('express-async-handler')
+const User=require('../src/models/UserSchema');
+const { off } = require('./models/ProductsShema');
 
 let messagesArray = [];
 let count;
@@ -122,6 +124,53 @@ db.once('open', () => {
       res.status(400).json({ message: error.message });
     }
   }));
+  
+
+
+  app.get('/chatrooms/user/:userId', asyncHandler(async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = await User.findById(userId);
+      
+      if (!user) {
+        res.status(400).json("User not found");
+        return;
+      }
+      
+      const chatRooms = await ChatRooms.find();
+      console.log(chatRooms);
+  
+      const userRooms = chatRooms.filter(room => room.name.includes(user.email));
+      console.log(userRooms)
+      const resultUsers = [];
+      if(userRooms){
+        for (const room of userRooms) {
+            const emails = room.name.split(',');
+            for (const email of emails) {
+              const trimmedEmail = email.trim();
+              if (trimmedEmail !== user.email) {
+                const otherUser = await User.findOne({ email: trimmedEmail });
+                if (otherUser) {
+                  resultUsers.push(otherUser);
+                }
+              }
+            }
+          }
+      
+          if (resultUsers.length > 0) {
+            res.json(resultUsers);
+          } else {
+            res.status(400).json("No users found in the chat rooms");
+          }
+      }else {
+        res.status(400).json("No userrooms found");
+      }
+
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }));
+  
   
 
 });
