@@ -4,7 +4,7 @@ const Product =require('../models/ProductsShema')
 const ProdutosVendidos=require('../models/ProdutosVendidos')
 const asyncHandler = require('express-async-handler')
 const User=require('../models/UserSchema')
-
+const { getIO } = require('../socke');
 
 router.post('/:id/add', asyncHandler(async (req, res) => {
     try {
@@ -26,6 +26,8 @@ router.post('/:id/add', asyncHandler(async (req, res) => {
         // Salvar o produto
         const createdProduct = await product.save();
         res.status(201).json(createdProduct);
+        const io = getIO();
+        io.emit('newProduct', { product: req.body });
     } catch (error) {
         console.log("errouuuu")
         res.status(400).json({ message: error.message });
